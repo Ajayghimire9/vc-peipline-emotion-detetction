@@ -1,0 +1,10 @@
+stages:
+  train:
+    cmd: python -m emotionflow.pipeline
+    deps:
+      - emotionflow/pipeline.py
+      - examples/texts.csv
+    outs:
+      - artifacts/model.joblib
+    metrics:
+      - artifacts/metrics.json

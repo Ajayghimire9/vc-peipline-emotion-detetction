@@ -1,57 +1,34 @@
-vc-pipeline-emotion-detection
-==============================
+# EmotionFlow
 
-small emotion detection
+Text emotion classification with abstention.
 
-Project Organization
-------------
+EmotionFlow provides a local workflow for classifying labelled emotion text. It supports multiple string labels and keeps the vectorizer and model together, avoiding separate artifacts that can drift out of sync.
 
-    ├── LICENSE
-    ├── Makefile           <- Makefile with commands like `make data` or `make train`
-    ├── README.md          <- The top-level README for developers using this project.
-    ├── data
-    │   ├── external       <- Data from third party sources.
-    │   ├── interim        <- Intermediate data that has been transformed.
-    │   ├── processed      <- The final, canonical data sets for modeling.
-    │   └── raw            <- The original, immutable data dump.
-    │
-    ├── docs               <- A default Sphinx project; see sphinx-doc.org for details
-    │
-    ├── models             <- Trained and serialized models, model predictions, or model summaries
-    │
-    ├── notebooks          <- Jupyter notebooks. Naming convention is a number (for ordering),
-    │                         the creator's initials, and a short `-` delimited description, e.g.
-    │                         `1.0-jqp-initial-data-exploration`.
-    │
-    ├── references         <- Data dictionaries, manuals, and all other explanatory materials.
-    │
-    ├── reports            <- Generated analysis as HTML, PDF, LaTeX, etc.
-    │   └── figures        <- Generated graphics and figures to be used in reporting
-    │
-    ├── requirements.txt   <- The requirements file for reproducing the analysis environment, e.g.
-    │                         generated with `pip freeze > requirements.txt`
-    │
-    ├── setup.py           <- makes project pip installable (pip install -e .) so src can be imported
-    ├── src                <- Source code for use in this project.
-    │   ├── __init__.py    <- Makes src a Python module
-    │   │
-    │   ├── data           <- Scripts to download or generate data
-    │   │   └── make_dataset.py
-    │   │
-    │   ├── features       <- Scripts to turn raw data into features for modeling
-    │   │   └── build_features.py
-    │   │
-    │   ├── models         <- Scripts to train models and then use trained models to make
-    │   │   │                 predictions
-    │   │   ├── predict_model.py
-    │   │   └── train_model.py
-    │   │
-    │   └── visualization  <- Scripts to create exploratory and results oriented visualizations
-    │       └── visualize.py
-    │
-    └── tox.ini            <- tox file with settings for running tox; see tox.readthedocs.io
+## Run locally
 
+Use Python 3.11 or newer in a virtual environment.
 
---------
+```bash
+pip install -r requirements-portfolio.txt
+python -m emotionflow.pipeline --data examples/texts.csv
+```
 
-<p><small>Project based on the <a target="_blank" href="https://drivendata.github.io/cookiecutter-data-science/">cookiecutter data science project template</a>. #cookiecutterdatascience</small></p>
+## Design decisions
+
+The portable workflow accepts text,label CSV data and compares word and character n-gram models with stratified validation.
+
+Predictions below the configured confidence threshold return review status with no assigned label.
+
+The original DVC stage scripts remain as historical experiments. The maintained workflow is in emotionflow; dvc-portfolio.yaml describes its reproducible stage.
+
+## Technology
+
+Python, scikit-learn, pandas, joblib, DVC stage definition, pytest.
+
+## Validation
+
+Run `python -m pytest tests -q` from the repository root. CI runs the maintained test suite and lint checks. Tests use local fixtures or mocks and do not deploy cloud resources.
+
+## Scope and limitations
+
+The happiness, sadness and anger examples are small synthetic fixtures. Emotion labels describe dataset annotations; they do not establish a person’s internal emotional state. No external corpus or model weights are downloaded by the maintained workflow.
